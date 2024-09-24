@@ -111,7 +111,7 @@ std::expected<void, std::string> SpdReader::ReadFrom(std::istream& input) {
          !token.has_value(); token = ReadNextToken(text_view)) {
       if ((*token)[0] == '#') {
         token->remove_prefix(1);
-        ParseComment(*token);
+        HandleComment(*token);
       } else {
         long double value;
         if (std::from_chars(token->data(), token->data() + token->size(), value)
@@ -124,7 +124,7 @@ std::expected<void, std::string> SpdReader::ReadFrom(std::istream& input) {
           continue;
         }
 
-        ParseSample(*wavelength, value);
+        HandleSample(*wavelength, value);
         wavelength.reset();
       }
     }

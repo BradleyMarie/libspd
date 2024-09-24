@@ -19,10 +19,10 @@ class SpdReader {
   std::expected<void, std::string> ReadFrom(std::istream& input);
 
  protected:
-  virtual std::expected<void, std::string> ParseComment(
+  virtual std::expected<void, std::string> HandleComment(
       std::string_view comment) = 0;
-  virtual std::expected<void, std::string> ParseSample(long double wavelength,
-                                                       long double value) = 0;
+  virtual std::expected<void, std::string> HandleSample(
+      long double wavelength, long double spectral_power) = 0;
 };
 
 }  // namespace libspd

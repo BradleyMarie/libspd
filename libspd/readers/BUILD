@@ -7,7 +7,7 @@ cc_library(
     srcs = ["emissive_spd_reader.cc"],
     hdrs = ["emissive_spd_reader.h"],
     deps = [
-        "//libspd:spd_reader",
+        ":validating_spd_reader",
     ],
 )
 
@@ -15,6 +15,14 @@ cc_library(
     name = "reflective_spd_reader",
     srcs = ["reflective_spd_reader.cc"],
     hdrs = ["reflective_spd_reader.h"],
+    deps = [
+        ":validating_spd_reader",
+    ],
+)
+
+cc_library(
+    name = "validating_spd_reader",
+    hdrs = ["validating_spd_reader.h"],
     deps = [
         "//libspd:spd_reader",
     ],

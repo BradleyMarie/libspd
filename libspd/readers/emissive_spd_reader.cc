@@ -1,66 +1,21 @@
 
 #include "libspd/readers/emissive_spd_reader.h"
 
-#include <cmath>
-
-#include "libspd/spd_reader.h"
+#include "libspd/readers/validating_spd_reader.h"
 
 namespace libspd {
 namespace {
 
 template <std::floating_point Type>
-class EmisiveSpdReader final : public SpdReader {
- public:
-  std::map<Type, Type> samples;
-
+class EmisiveSpdReader final : public ValidatingSpdReader<Type> {
  protected:
-  virtual std::expected<void, std::string> ParseComment(
+  virtual std::expected<void, std::string> HandleComment(
       std::string_view comment) override {
     return std::expected<void, std::string>();
   }
 
-  virtual std::expected<void, std::string> ParseSample(
-      long double wavelength, long double value) override {
-    if (wavelength < static_cast<long double>(0.0)) {
-      return std::unexpected(
-          "The input contained a sample with a negative wavelength");
-    }
-
-    if (value < static_cast<long double>(0.0)) {
-      return std::unexpected(
-          "The input contained a sample with a negative spectral power");
-    }
-
-    Type wavelength_final_precision = static_cast<Type>(wavelength);
-    if (wavelength_final_precision == static_cast<Type>(0.0)) {
-      return std::unexpected(
-          "The input contained a sample for wavelength zero");
-    }
-
-    if (!std::isfinite(wavelength_final_precision)) {
-      return std::unexpected(
-          "The input contained a sample with for a non-finite wavelength");
-    }
-
-    Type value_final_precision = static_cast<Type>(value);
-
-    if (!std::isfinite(value_final_precision)) {
-      return std::unexpected(
-          "The input contained a sample with a non-finite spectral power");
-    }
-
-    if (!std::isfinite(value_final_precision)) {
-      return std::unexpected(
-          "The input contained a sample with a non-finite spectral power");
-    }
-
-    auto [_, inserted] =
-        samples.try_emplace(wavelength_final_precision, value_final_precision);
-    if (!inserted) {
-      return std::unexpected(
-          "The input contained multiple samples for the same wavelength");
-    }
-
+  virtual std::expected<void, std::string> HandleSample(
+      std::pair<const Type, Type>& sample) override {
     return std::expected<void, std::string>();
   }
 };
@@ -76,7 +31,7 @@ ReadEmisiveSpdAsLongDoublesFrom(std::istream& input) {
     return std::unexpected(std::move(result.error()));
   }
 
-  return std::move(reader.samples);
+  return reader.Reset();
 }
 
 std::expected<std::map<double, double>, std::string>
@@ -88,7 +43,7 @@ ReadEmisiveSpdAsDoublesFrom(std::istream& input) {
     return std::unexpected(std::move(result.error()));
   }
 
-  return std::move(reader.samples);
+  return reader.Reset();
 }
 
 std::expected<std::map<float, float>, std::string> ReadEmisiveSpdAsFloatsFrom(
@@ -100,7 +55,7 @@ std::expected<std::map<float, float>, std::string> ReadEmisiveSpdAsFloatsFrom(
     return std::unexpected(std::move(result.error()));
   }
 
-  return std::move(reader.samples);
+  return reader.Reset();
 }
 
 }  // namespace libspd
