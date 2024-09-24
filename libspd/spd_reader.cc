@@ -12,11 +12,17 @@ std::pair<std::string, std::string> ReadFirstLine(std::istream& input) {
 
   char c;
   while (input.get(c)) {
+    if (c == '\n') {
+      line_ending += c;
+      break;
+    }
+
     if (c == '\r') {
       line_ending += c;
 
       int next = input.peek();
       if (next == '\n') {
+        input.get(c);
         line_ending += c;
       }
 
