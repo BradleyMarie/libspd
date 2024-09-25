@@ -6,10 +6,12 @@
 A zero-dependency SPD file reader for C++23. While there is no formal definition
 of the SPD format, informal documentation can be found in the source code of the
 [PBRT renderer](https://github.com/mmp/pbrt-v4/blob/39e01e61f8de07b99859df04b271a02a53d9aeb2/src/pbrt/util/spectrum.cpp#L106)
-as well as in the [SPD files](https://github.com/mmp/pbrt-v4-scenes/blob/30cf4a0346ae5a80a2d7a530a3ef7d0fa4f70572/killeroos/spds/Au.k.spd#L4) in its example scenes. At a high level the format can be described as an ASCII
-file containing a list of whitespace separated floating point numbers where the
-numbers alternate in significant between representing a wavelength and
-representing a spectral power with comments indicated using the `#` character.
+as well as in the [SPD files](https://github.com/mmp/pbrt-v4-scenes/blob/30cf4a0346ae5a80a2d7a530a3ef7d0fa4f70572/killeroos/spds/Au.k.spd#L4) in its example scenes.
+
+At a high level the format can be described as an ASCII file containing a list
+of whitespace separated floating point numbers where the numbers alternate in
+significant between representing a wavelength and representing a spectral power.
+Additionally, the start of a comment can be indicated using the `#` character.
 
 ## Getting Started
 
