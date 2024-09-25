@@ -77,14 +77,14 @@ std::optional<std::string_view> ReadNextToken(std::string_view& text) {
     return result;
   }
 
-  size_t token_length = 1;
-  for (size_t token_length = 1; token_length < text.size(); token_length++) {
-    if (!std::isgraph(text[token_length])) {
+  size_t token_length;
+  for (token_length = 1; token_length < text.size(); token_length++) {
+    if (!std::isgraph(text[token_length]) || text[token_length] == '#') {
       break;
     }
   }
 
-  std::string_view result = text.substr(token_length);
+  std::string_view result = text.substr(0, token_length);
   text.remove_prefix(token_length);
 
   return result;
@@ -93,6 +93,10 @@ std::optional<std::string_view> ReadNextToken(std::string_view& text) {
 }  // namespace
 
 std::expected<void, std::string> SpdReader::ReadFrom(std::istream& input) {
+  if (input.fail()) {
+    return std::unexpected("Bad input stream passed");
+  }
+
   auto [text, line_ending] = ReadFirstLine(input);
 
   std::string_view text_view(text);
@@ -114,25 +118,35 @@ std::expected<void, std::string> SpdReader::ReadFrom(std::istream& input) {
     }
 
     for (std::optional<std::string_view> token = ReadNextToken(text_view);
-         !token.has_value(); token = ReadNextToken(text_view)) {
+         token.has_value(); token = ReadNextToken(text_view)) {
       if ((*token)[0] == '#') {
         token->remove_prefix(1);
-        HandleComment(*token);
-      } else {
-        long double value;
-        if (std::from_chars(token->data(), token->data() + token->size(), value)
-                .ec != std::errc{}) {
-          return std::unexpected("The input contained an unparsable token");
+        if (std::expected<void, std::string> result = HandleComment(*token);
+            !result) {
+          return result;
         }
 
-        if (!wavelength) {
-          wavelength = value;
-          continue;
-        }
-
-        HandleSample(*wavelength, value);
-        wavelength.reset();
+        continue;
       }
+
+      long double value;
+      if (std::from_chars(token->data(), token->data() + token->size(), value)
+              .ec != std::errc{}) {
+        return std::unexpected("The input contained an unparsable token");
+      }
+
+      if (!wavelength) {
+        wavelength = value;
+        continue;
+      }
+
+      if (std::expected<void, std::string> result =
+              HandleSample(*wavelength, value);
+          !result) {
+        return result;
+      }
+
+      wavelength.reset();
     }
   }
 
