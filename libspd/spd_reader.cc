@@ -107,9 +107,9 @@ std::expected<void, std::string> SpdReader::ReadFrom(std::istream& input) {
         break;
       }
 
-      std::expected<void, std::string> parse_result =
-          ReadNextLine(input, line_ending, text);
-      if (!parse_result) {
+      if (std::expected<void, std::string> parse_result =
+              ReadNextLine(input, line_ending, text);
+          !parse_result) {
         return parse_result;
       }
 
