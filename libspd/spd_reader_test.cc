@@ -29,14 +29,14 @@ std::ifstream OpenRunfile(const std::string& filename) {
                        std::ios::in | std::ios::binary);
 }
 
-TEST(ReadPlyHeader, BadStream) {
+TEST(SpdReader, BadStream) {
   std::ifstream input = OpenRunfile("notarealfile.spd");
 
   MockSpdReader spd_reader;
   EXPECT_EQ("Bad input stream passed", spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, MismatchedLineEndings) {
+TEST(SpdReader, MismatchedLineEndings) {
   std::ifstream input = OpenRunfile("mismatched_line_endings.spd");
 
   MockSpdReader spd_reader;
@@ -47,7 +47,7 @@ TEST(ReadPlyHeader, MismatchedLineEndings) {
             spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, UnparsableToken) {
+TEST(SpdReader, UnparsableToken) {
   std::ifstream input = OpenRunfile("unparsable_token.spd");
 
   MockSpdReader spd_reader;
@@ -57,7 +57,7 @@ TEST(ReadPlyHeader, UnparsableToken) {
             spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, OddNumberOfTokens) {
+TEST(SpdReader, OddNumberOfTokens) {
   std::ifstream input = OpenRunfile("odd_number_of_tokens.spd");
 
   MockSpdReader spd_reader;
@@ -67,7 +67,7 @@ TEST(ReadPlyHeader, OddNumberOfTokens) {
             spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, ReturnsCommentError) {
+TEST(SpdReader, ReturnsCommentError) {
   std::ifstream input = OpenRunfile("comment_only.spd");
 
   MockSpdReader spd_reader;
@@ -77,7 +77,7 @@ TEST(ReadPlyHeader, ReturnsCommentError) {
   EXPECT_EQ("error", spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, ReturnsSampleError) {
+TEST(SpdReader, ReturnsSampleError) {
   std::ifstream input = OpenRunfile("valid_unix.spd");
 
   MockSpdReader spd_reader;
@@ -87,7 +87,7 @@ TEST(ReadPlyHeader, ReturnsSampleError) {
   EXPECT_EQ("error", spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, Empty) {
+TEST(SpdReader, Empty) {
   std::ifstream input = OpenRunfile("empty.spd");
 
   MockSpdReader spd_reader;
@@ -96,7 +96,7 @@ TEST(ReadPlyHeader, Empty) {
   EXPECT_TRUE(spd_reader.ReadFrom(input));
 }
 
-TEST(ReadPlyHeader, SingleLine) {
+TEST(SpdReader, SingleLine) {
   std::ifstream input = OpenRunfile("single_line.spd");
 
   MockSpdReader spd_reader;
@@ -114,7 +114,7 @@ TEST(ReadPlyHeader, SingleLine) {
   EXPECT_TRUE(spd_reader.ReadFrom(input));
 }
 
-TEST(ReadPlyHeader, CommentOnly) {
+TEST(SpdReader, CommentOnly) {
   std::ifstream input = OpenRunfile("comment_only.spd");
 
   MockSpdReader spd_reader;
@@ -125,7 +125,7 @@ TEST(ReadPlyHeader, CommentOnly) {
   EXPECT_TRUE(spd_reader.ReadFrom(input));
 }
 
-TEST(ReadPlyHeader, RawWithComments) {
+TEST(SpdReader, RawWithComments) {
   std::ifstream input = OpenRunfile("raw_with_comments.spd");
 
   MockSpdReader spd_reader;
@@ -151,7 +151,7 @@ TEST(ReadPlyHeader, RawWithComments) {
   EXPECT_TRUE(spd_reader.ReadFrom(input));
 }
 
-TEST(ReadPlyHeader, ValidMac) {
+TEST(SpdReader, ValidMac) {
   std::ifstream input = OpenRunfile("valid_mac.spd");
 
   MockSpdReader spd_reader;
@@ -168,7 +168,7 @@ TEST(ReadPlyHeader, ValidMac) {
   EXPECT_TRUE(spd_reader.ReadFrom(input));
 }
 
-TEST(ReadPlyHeader, ValidUnix) {
+TEST(SpdReader, ValidUnix) {
   std::ifstream input = OpenRunfile("valid_unix.spd");
 
   MockSpdReader spd_reader;
@@ -185,7 +185,7 @@ TEST(ReadPlyHeader, ValidUnix) {
   EXPECT_TRUE(spd_reader.ReadFrom(input));
 }
 
-TEST(ReadPlyHeader, ValidWindows) {
+TEST(SpdReader, ValidWindows) {
   std::ifstream input = OpenRunfile("valid_windows.spd");
 
   MockSpdReader spd_reader;

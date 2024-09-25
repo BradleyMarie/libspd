@@ -7,7 +7,7 @@ namespace libspd {
 namespace {
 
 template <std::floating_point Type>
-class EmisiveSpdReader final : public ValidatingSpdReader<Type> {
+class EmissiveSpdReader final : public ValidatingSpdReader<Type> {
  protected:
   virtual std::expected<void, std::string> HandleComment(
       std::string_view comment) override {
@@ -23,8 +23,8 @@ class EmisiveSpdReader final : public ValidatingSpdReader<Type> {
 }  // namespace
 
 std::expected<std::map<long double, long double>, std::string>
-ReadEmisiveSpdAsLongDoublesFrom(std::istream& input) {
-  EmisiveSpdReader<long double> reader;
+ReadEmissiveSpdAsLongDoublesFrom(std::istream& input) {
+  EmissiveSpdReader<long double> reader;
 
   std::expected<void, std::string> result = reader.ReadFrom(input);
   if (!result) {
@@ -35,8 +35,8 @@ ReadEmisiveSpdAsLongDoublesFrom(std::istream& input) {
 }
 
 std::expected<std::map<double, double>, std::string>
-ReadEmisiveSpdAsDoublesFrom(std::istream& input) {
-  EmisiveSpdReader<double> reader;
+ReadEmissiveSpdAsDoublesFrom(std::istream& input) {
+  EmissiveSpdReader<double> reader;
 
   std::expected<void, std::string> result = reader.ReadFrom(input);
   if (!result) {
@@ -46,9 +46,9 @@ ReadEmisiveSpdAsDoublesFrom(std::istream& input) {
   return reader.Reset();
 }
 
-std::expected<std::map<float, float>, std::string> ReadEmisiveSpdAsFloatsFrom(
+std::expected<std::map<float, float>, std::string> ReadEmissiveSpdAsFloatsFrom(
     std::istream& input) {
-  EmisiveSpdReader<float> reader;
+  EmissiveSpdReader<float> reader;
 
   std::expected<void, std::string> result = reader.ReadFrom(input);
   if (!result) {

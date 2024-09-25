@@ -11,23 +11,23 @@
 namespace libspd {
 
 std::expected<std::map<long double, long double>, std::string>
-ReadEmisiveSpdAsLongDoublesFrom(std::istream& input);
+ReadEmissiveSpdAsLongDoublesFrom(std::istream& input);
 
 std::expected<std::map<double, double>, std::string>
-ReadEmisiveSpdAsDoublesFrom(std::istream& input);
+ReadEmissiveSpdAsDoublesFrom(std::istream& input);
 
-std::expected<std::map<float, float>, std::string> ReadEmisiveSpdAsFloatsFrom(
+std::expected<std::map<float, float>, std::string> ReadEmissiveSpdAsFloatsFrom(
     std::istream& input);
 
 template <std::floating_point Type>
-std::expected<std::map<Type, Type>, std::string> ReadEmisiveSpdFrom(
+std::expected<std::map<Type, Type>, std::string> ReadEmissiveSpdFrom(
     std::istream& input) {
   if constexpr (std::is_same<long double, Type>()) {
-    return ReadEmisiveSpdAsLongDoublesFrom(input);
+    return ReadEmissiveSpdAsLongDoublesFrom(input);
   } else if constexpr (std::is_same<double, Type>()) {
-    return ReadEmisiveSpdAsDoublesFrom(input);
+    return ReadEmissiveSpdAsDoublesFrom(input);
   } else {
-    return ReadEmisiveSpdAsFloatsFrom(input);
+    return ReadEmissiveSpdAsFloatsFrom(input);
   }
 }
 

@@ -32,14 +32,14 @@ std::ifstream OpenRunfile(const std::string& filename) {
                        std::ios::in | std::ios::binary);
 }
 
-TEST(ReadPlyHeader, Nothing) {
+TEST(ValidatingSpdReader, Nothing) {
   MockValidatingSpdReader spd_reader;
   EXPECT_CALL(spd_reader, HandleComment(_)).Times(0);
   EXPECT_CALL(spd_reader, HandleSample(_)).Times(0);
   EXPECT_THAT(spd_reader.Reset(), IsEmpty());
 }
 
-TEST(ReadPlyHeader, ReturnsCommentError) {
+TEST(ValidatingSpdReader, ReturnsCommentError) {
   std::ifstream input = OpenRunfile("well_formed.spd");
 
   MockValidatingSpdReader spd_reader;
@@ -51,7 +51,7 @@ TEST(ReadPlyHeader, ReturnsCommentError) {
   EXPECT_EQ("error", spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, ReturnsSampleError) {
+TEST(ValidatingSpdReader, ReturnsSampleError) {
   std::ifstream input = OpenRunfile("well_formed.spd");
 
   MockValidatingSpdReader spd_reader;
@@ -64,7 +64,7 @@ TEST(ReadPlyHeader, ReturnsSampleError) {
   EXPECT_EQ("error", spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, WellFormed) {
+TEST(ValidatingSpdReader, WellFormed) {
   std::ifstream input = OpenRunfile("well_formed.spd");
 
   MockValidatingSpdReader spd_reader;
@@ -88,7 +88,7 @@ TEST(ReadPlyHeader, WellFormed) {
   EXPECT_THAT(spd_reader.Reset(), IsEmpty());
 }
 
-TEST(ReadPlyHeader, NegativeWavelength) {
+TEST(ValidatingSpdReader, NegativeWavelength) {
   std::ifstream input = OpenRunfile("negative_wavelength.spd");
 
   MockValidatingSpdReader spd_reader;
@@ -98,7 +98,7 @@ TEST(ReadPlyHeader, NegativeWavelength) {
             spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, NegativeSpectralPower) {
+TEST(ValidatingSpdReader, NegativeSpectralPower) {
   std::ifstream input = OpenRunfile("negative_power.spd");
 
   MockValidatingSpdReader spd_reader;
@@ -108,7 +108,7 @@ TEST(ReadPlyHeader, NegativeSpectralPower) {
             spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, ZeroWavelength) {
+TEST(ValidatingSpdReader, ZeroWavelength) {
   std::ifstream input = OpenRunfile("zero_wavelength.spd");
 
   MockValidatingSpdReader spd_reader;
@@ -118,7 +118,7 @@ TEST(ReadPlyHeader, ZeroWavelength) {
             spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, NonFiniteWavelength) {
+TEST(ValidatingSpdReader, NonFiniteWavelength) {
   std::ifstream input = OpenRunfile("wavelength_too_large_for_float.spd");
 
   MockValidatingSpdReader spd_reader;
@@ -128,7 +128,7 @@ TEST(ReadPlyHeader, NonFiniteWavelength) {
             spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, NonFiniteSpectralPower) {
+TEST(ValidatingSpdReader, NonFiniteSpectralPower) {
   std::ifstream input = OpenRunfile("power_too_large_for_float.spd");
 
   MockValidatingSpdReader spd_reader;
@@ -138,7 +138,7 @@ TEST(ReadPlyHeader, NonFiniteSpectralPower) {
             spd_reader.ReadFrom(input).error());
 }
 
-TEST(ReadPlyHeader, DuplicateWavelength) {
+TEST(ValidatingSpdReader, DuplicateWavelength) {
   std::ifstream input = OpenRunfile("duplicate_wavelength.spd");
 
   MockValidatingSpdReader spd_reader;

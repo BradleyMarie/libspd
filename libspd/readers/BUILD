@@ -11,12 +11,39 @@ cc_library(
     ],
 )
 
+cc_test(
+    name = "emissive_spd_reader_test",
+    srcs = ["emissive_spd_reader_test.cc"],
+    data = [
+        "test_data/well_formed.spd",
+    ],
+    deps = [
+        ":emissive_spd_reader",
+        "@bazel_tools//tools/cpp/runfiles",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
 cc_library(
     name = "reflective_spd_reader",
     srcs = ["reflective_spd_reader.cc"],
     hdrs = ["reflective_spd_reader.h"],
     deps = [
         ":validating_spd_reader",
+    ],
+)
+
+cc_test(
+    name = "reflective_spd_reader_test",
+    srcs = ["reflective_spd_reader_test.cc"],
+    data = [
+        "test_data/well_formed.spd",
+        "test_data/well_formed_reflective.spd",
+    ],
+    deps = [
+        ":reflective_spd_reader",
+        "@bazel_tools//tools/cpp/runfiles",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
