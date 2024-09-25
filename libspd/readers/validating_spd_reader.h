@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <concepts>
+#include <map>
 
 #include "libspd/spd_reader.h"
 
@@ -39,21 +40,15 @@ class ValidatingSpdReader : public SpdReader {
     Type wavelength_final_precision = static_cast<Type>(wavelength);
     if (wavelength_final_precision == static_cast<Type>(0.0)) {
       return std::unexpected(
-          "The input contained a sample for wavelength zero");
+          "The input contained a sample with a wavelength of zero");
     }
 
     if (!std::isfinite(wavelength_final_precision)) {
       return std::unexpected(
-          "The input contained a sample with for a non-finite wavelength");
+          "The input contained a sample with a non-finite wavelength");
     }
 
     Type spectral_power_final_precision = static_cast<Type>(spectral_power);
-
-    if (!std::isfinite(spectral_power_final_precision)) {
-      return std::unexpected(
-          "The input contained a sample with a non-finite spectral power");
-    }
-
     if (!std::isfinite(spectral_power_final_precision)) {
       return std::unexpected(
           "The input contained a sample with a non-finite spectral power");
@@ -63,7 +58,7 @@ class ValidatingSpdReader : public SpdReader {
         wavelength_final_precision, spectral_power_final_precision);
     if (!inserted) {
       return std::unexpected(
-          "The input contained multiple samples for the same wavelength");
+          "The input contained multiple samples with the same wavelength");
     }
 
     return HandleSample(*iter);

@@ -27,3 +27,22 @@ cc_library(
         "//libspd:spd_reader",
     ],
 )
+
+cc_test(
+    name = "validating_spd_reader_test",
+    srcs = ["validating_spd_reader_test.cc"],
+    data = [
+        "test_data/duplicate_wavelength.spd",
+        "test_data/negative_power.spd",
+        "test_data/negative_wavelength.spd",
+        "test_data/power_too_large_for_float.spd",
+        "test_data/wavelength_too_large_for_float.spd",
+        "test_data/well_formed.spd",
+        "test_data/zero_wavelength.spd",
+    ],
+    deps = [
+        ":validating_spd_reader",
+        "@bazel_tools//tools/cpp/runfiles",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
