@@ -10,15 +10,19 @@
 
 namespace libspd {
 
+// NOTE: Behavior is undefined if input is not a binary stream
 std::expected<std::map<long double, long double>, std::string>
 ReadEmissiveSpdAsLongDoublesFrom(std::istream& input);
 
+// NOTE: Behavior is undefined if input is not a binary stream
 std::expected<std::map<double, double>, std::string>
 ReadEmissiveSpdAsDoublesFrom(std::istream& input);
 
+// NOTE: Behavior is undefined if input is not a binary stream
 std::expected<std::map<float, float>, std::string> ReadEmissiveSpdAsFloatsFrom(
     std::istream& input);
 
+// NOTE: Behavior is undefined if input is not a binary stream
 template <std::floating_point Type>
 std::expected<std::map<Type, Type>, std::string> ReadEmissiveSpdFrom(
     std::istream& input) {
