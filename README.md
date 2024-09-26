@@ -1,7 +1,7 @@
 # libSPD
 
 [![Test Status](https://github.com/BradleyMarie/libspd/actions/workflows/c-cpp.yml/badge.svg?branch=main)](https://github.com/BradleyMarie/libspd/actions/workflows/c-cpp.yml)
-![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://github.com/BradleyMarie/libspd/master/LICENSE)
 
 A zero-dependency SPD file reader for C++23. While there is no formal definition
 of the SPD format, informal documentation can be found in the source code of the
@@ -10,8 +10,8 @@ as well as in the [SPD files](https://github.com/mmp/pbrt-v4-scenes/blob/30cf4a0
 
 At a high level the format can be described as an ASCII file containing a list
 of whitespace separated floating point numbers where the numbers alternate in
-significant between representing a wavelength and representing a spectral power.
-Additionally, the start of a comment can be indicated using the `#` character.
+significance between representing a wavelength and representing a spectral
+power.
 
 ## Getting Started
 
@@ -42,23 +42,26 @@ that there are an even number of tokens, and that line endings are consistent
 The `SpdReader` class is designed for extension and exposes a small public API
 as well as a small protected API that derived classes must implement.
 
-Also inside the `libspd` directory resides the `readers` directory. This
-directory contains a pre-implemented readers for SPD files that do more 
-validation and contain more limited APIs than the base `SpdReader` class and are
-thus easier to work with.
+Also inside the `libspd` directory is the `readers` directory. This directory
+contains pre-implemented readers for SPD files that do more validation than the
+base `SpdReader` class and reduce the amount of code clients would need to
+implement.
 
-Currently, `readers` contains `ValidatingSpdReader` which layers on top of
-the base `SpdReader` class and validates that wavelength and spectral power
-values are finite and non-negative as well as validating that wavelengths are
-non-zero and that no wavelength has been sampled more than once. The class also
-handles converting samples into the desired precision since `SpdReader` always
-parses values into the maximum precision supported by the system. libSPD also
-provides two library functions `ReadEmissiveSpdFrom` and `ReadReflectiveSpdFrom`
-which are built on top of `ValidatingSpdReader` and which hide the details of
-their implementation and instead allow SPD files to be read using simple
-as a simple function call. The only difference between these two functions is
-that `ReadEmissiveSpdFrom` allows spectral powers greater than one while
-`ReadReflectiveSpdFrom` will return an error if it encounters such a sample.
+Currently, this extra validation is provided by `ValidatingSpdReader` which
+layers on top of `SpdReader` class and validates that wavelengths are 
+finite/non-zero/non-negative, that spectral power values are finite/non-negative,
+and that no wavelength has been sampled more than once. The class also handles
+converting samples into the client's desired precision since `SpdReader` always
+parses values into the maximum precision supported by the system. 
+
+Also residing in the `readers` directory are the library functions 
+`ReadEmissiveSpdFrom` and `ReadReflectiveSpdFrom`. These functions are built
+using `ValidatingSpdReader` and provide the simplest interface for reading an
+SPD file taking as inputs a binary-stream and returning back an ordered map from
+wavelength to spectral power of the samples from the file in the client's
+desired precision. The only difference between the two functions is that
+`ReadEmissiveSpdFrom` will successfully spectral powers greater than one while
+`ReadReflectiveSpdFrom` will return an error.
 
 ## Examples
 
@@ -69,9 +72,9 @@ for how to work with the library.
 Additionally, the code in the `readers` directory can be used as a reference
 for working with the `SpdReader` class directly.
 
-It is expected that most clients will use either the `ReadEmissiveSpdFrom` or
-`ReadReflectiveSpdFrom` functions from the `readers` directory since it avoids
-the need for the client to work with any of the libSPD classes directly.
+It is expected that most clients will simply use either `ReadEmissiveSpdFrom` or
+`ReadReflectiveSpdFrom` and will avoid the added complexity of working with
+`SpdReader` or `ValidatingSpdReader` directly.
 
 ## Versioning
 
@@ -79,5 +82,6 @@ libSPD currently is not strongly versioned and it is recommended that users
 update to the latest commit from the main branch as often as is reasonably
 possible.
 
-The public API of `SpdReader` at this point should be mostly locked down;
-however, it is possible that future commits may introduce breaking API changes.
+The public API of `SpdReader` and `ValidatingSpdReader` should be stable at this
+point; however, it is possible that future commits may introduce breaking API
+changes.
