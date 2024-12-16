@@ -24,7 +24,7 @@ class MockSpdReader final : public SpdReader {
 
 std::ifstream OpenRunfile(const std::string& filename) {
   std::unique_ptr<Runfiles> runfiles(Runfiles::CreateForTest());
-  std::string path = "__main__/libspd/test_data/" + filename;
+  std::string path = "_main/libspd/test_data/" + filename;
   return std::ifstream(runfiles->Rlocation(path),
                        std::ios::in | std::ios::binary);
 }

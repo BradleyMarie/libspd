@@ -26,6 +26,6 @@ cc_test(
     deps = [
         ":spd_reader",
         "@bazel_tools//tools/cpp/runfiles",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )

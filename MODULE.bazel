@@ -1,0 +1,6 @@
+"libspd is a zero-dependency SPD reader for C++23"
+module(name = "libspd", version = "head", compatibility_level = 1)
+
+# Only direct dependencies need to be listed below.
+bazel_dep(name = "googletest", version = "1.15.2")
+bazel_dep(name = "rules_cc", version = "0.1.0")
