@@ -3,12 +3,13 @@
 [![Test Status](https://github.com/BradleyMarie/libspd/actions/workflows/c-cpp.yml/badge.svg?branch=main)](https://github.com/BradleyMarie/libspd/actions/workflows/c-cpp.yml)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://github.com/BradleyMarie/libspd/master/LICENSE)
 
-A zero-dependency SPD file reader for C++23. While there is no formal definition
-of the SPD format, informal documentation can be found in the source code of the
+A zero-dependency SPD reader for C++23. While there is no formal definition of
+the SPD format, informal documentation can be found in the source code of the
 [PBRT renderer](https://github.com/mmp/pbrt-v4/blob/39e01e61f8de07b99859df04b271a02a53d9aeb2/src/pbrt/util/spectrum.cpp#L106)
-as well as in the [SPD files](https://github.com/mmp/pbrt-v4-scenes/blob/30cf4a0346ae5a80a2d7a530a3ef7d0fa4f70572/killeroos/spds/Au.k.spd#L4) in its example scenes.
+as well as in the [SPD files](https://github.com/mmp/pbrt-v4-scenes/blob/30cf4a0346ae5a80a2d7a530a3ef7d0fa4f70572/killeroos/spds/Au.k.spd#L4)
+of its example scenes.
 
-At a high level the format can be described as an ASCII file containing a list
+At a high level the format can be described as an ASCII input containing a list
 of whitespace separated floating point numbers where the numbers alternate in
 significance between representing a wavelength and representing a spectral
 power.
@@ -17,9 +18,11 @@ power.
 
 libSPD uses Bazel as its build system. If you are using Bazel as well, you can
 import libSPD into your workspace by adding a snippet like the following into
-your `WORKSPACE` file.
+your `MODULE.bazel` file.
 
 ```
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
     name = "libspd",
     sha256 = "9c906a7764db5747ff19642ecdaab6c181da1d81c5db6691bc5cc5ef311c0db7",
@@ -34,7 +37,7 @@ snapshot.
 
 libSPD code is structured with the core modules residing in the `libspd`
 directory. `spd_reader` contains the parent `SpdReader` class that contains the
-logic for parsing out the contents of an SPD file. This class does very little
+logic for parsing out the contents of an SPD input. This class does very little
 validation of its own other than ensuring that tokens are parsable into floats,
 that there are an even number of tokens, and that line endings are consistent
 (which is required in order to properly delineate where a comment ends).
@@ -43,7 +46,7 @@ The `SpdReader` class is designed for extension and exposes a small public API
 as well as a small protected API that derived classes must implement.
 
 Also inside the `libspd` directory is the `readers` directory. This directory
-contains pre-implemented readers for SPD files that do more validation than the
+contains pre-implemented readers for SPD inputs that do more validation than the
 base `SpdReader` class and reduce the amount of code clients would need to
 implement.
 
@@ -57,8 +60,8 @@ parses values into the maximum precision supported by the system.
 Also residing in the `readers` directory are the library functions 
 `ReadEmissiveSpdFrom` and `ReadReflectiveSpdFrom`. These functions are built
 using `ValidatingSpdReader` and provide the simplest interface for reading an
-SPD file taking as inputs a binary-stream and returning back an ordered map from
-wavelength to spectral power of the samples from the file in the client's
+SPD input taking as inputs a binary-stream and returning back an ordered map
+from wavelength to spectral power of the samples from the input in the client's
 desired precision. The only difference between the two functions is that
 `ReadEmissiveSpdFrom` will successfully spectral powers greater than one while
 `ReadReflectiveSpdFrom` will return an error.
