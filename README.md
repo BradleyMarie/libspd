@@ -21,19 +21,16 @@ import libSPD into your workspace by adding a snippet like the following into
 your `MODULE.bazel` file.
 
 ```
-http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-http_archive(
-    name = "libspd",
-    sha256 = "9c906a7764db5747ff19642ecdaab6c181da1d81c5db6691bc5cc5ef311c0db7",
-    strip_prefix = "libspd-9d970474acae30a6bb0efc28d8b995b204ca30e2",
-    url = "https://github.com/BradleyMarie/libspd/archive/9d970474acae30a6bb0efc28d8b995b204ca30e2.zip",
+bazel_dep(name = "libspd")
+git_override(
+    module_name = "libspd",
+    remote = "https://github.com/bradleymarie/libspd.git",
+    commit = "4fbad05b280bb54a4e97b5cef044764bc8c99f43",
 )
 ```
 
-Note: You should update `url` and `strip_prefix` to point to the latest commit
-on the main branch and should also update `sha256` with the checksum from that
-snapshot.
+Note: You should update `commit` to reference the to the latest commit on the
+main branch.
 
 libSPD code is structured with the core modules residing in the `libspd`
 directory. `spd_reader` contains the parent `SpdReader` class that contains the
