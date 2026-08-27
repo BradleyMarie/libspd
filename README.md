@@ -25,7 +25,7 @@ bazel_dep(name = "libspd")
 git_override(
     module_name = "libspd",
     remote = "https://github.com/bradleymarie/libspd.git",
-    commit = "4fbad05b280bb54a4e97b5cef044764bc8c99f43",
+    commit = "75b4fa28bd65e099d7966046cb3520355d137e45",
 )
 ```
 
